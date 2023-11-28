@@ -23,3 +23,5 @@ jobs:
       sha: ${{ github.sha }}
       build-type: nightly-release
       use-container: true
+      ucx-config: no_ucx
+      ucx-string: ''
