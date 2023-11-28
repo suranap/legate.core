@@ -27,9 +27,27 @@ build_legate_release() {
     conda mambabuild --output-folder /tmp/conda-build -c nvidia -c conda-forge --no-include-recipe conda/conda-build
 }
 
+build_legate_nightly_release() {
+    mkdir -p /tmp/env_yaml /tmp/conda-build
+
+    cat <<EOF >> $REPO_DIR/conda/conda-build/conda_build_config.yaml
+enable_nightly_package:
+  - "true"
+EOF
+    conda mambabuild --output-folder /tmp/conda-build -c nvidia -c conda-forge --no-include-recipe conda/conda-build
+}
+
 copy_release_artifacts() {
     echo Copying release artifacts
     cp /tmp/conda-build/linux-64/legate-core-*.tar.bz2 "$ARTIFACTS_DIR"
+}
+
+post_nightly_release_artifacts() {
+    echo Copying release artifacts
+    cp /tmp/conda-build/linux-64/legate-core-*.tar.bz2 "$ARTIFACTS_DIR"
+    echo "NIGHTLY -PRGX"
+    #conda install -c anaconda anaconda-client
+    anaconda -V
 }
 
 copy_ci_artifacts() {
@@ -62,6 +80,7 @@ build_legate() {
     case "$BUILD_TYPE" in
         ci) build_legate_ci && copy_ci_artifacts;;
         release) build_legate_release && copy_release_artifacts;;
+        nightly-release) build_legate_nightly_release && post_nightly_release_artifacts;;
         *) return 1;;
     esac
 }
