@@ -18,8 +18,7 @@ jobs:
     with:
       build-target: all
       repos-name: ${{ github.event.repository.name }}
-    #  runs-on: ${{ github.repository_owner == 'nv-legate' && 'linux-amd64-32cpu' || 'ubuntu-latest' }}
-      runs-on: legate-ci-06
+      runs-on: ${{ github.repository_owner == 'nv-legate' && 'linux-amd64-32cpu' || 'ubuntu-latest' }}
       sha: ${{ github.sha }}
       build-type: release
       use-container: true
